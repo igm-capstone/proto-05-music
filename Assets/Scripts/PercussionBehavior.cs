@@ -16,9 +16,17 @@ public class PercussionBehavior : MonoBehaviour
     private float dPadX;
     private float dPadY;
 
+    private float h = 0.0f;
+    private float v = 0.0f;
+
+    private bool isMoving;
+    private int frameCount;
+
+    public Rigidbody rbody;
 	// Use this for initialization
-	void Start () {
-	
+	void Start ()
+    {
+        rbody = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
@@ -29,8 +37,64 @@ public class PercussionBehavior : MonoBehaviour
 
         dPadX = Input.GetAxis("DPadX");
         dPadY = Input.GetAxis("DPadY");
+
+        //if (Input.GetButtonDown("B"))
+        //{
+        //    isMoving = true;
+        //}
+
+        //if (Input.GetButtonUp("B"))
+        //{
+        //    isMoving = false;
+        //}
+
+        //if (GetDPadRightButtonDown())
+        //{
+        //    h = 1.0f;
+        //    v = 0.0f;
+        //}
+
+        //if (GetDPadUpButtonDown())
+        //{
+        //    h = 0.0f;
+        //    v = 1.0f;
+        //}
+
+
+        if (Input.GetButtonDown("B") || GetDPadRightButtonDown())
+        {
+            //rbody.AddForceAtPosition(Vector3.up * 50.0f, transform.position - Vector3.up + Vector3.right);
+            rbody.AddForce(Vector3.right * 100, ForceMode.Force);
+            //  rbody.AddRelativeTorque(transform.right * 100, ForceMode.Force);
+            //isMoving = true;
+        }
+
+        if (Input.GetButtonDown("Y") || GetDPadUpButtonDown())
+        {
+            //rbody.AddForceAtPosition(Vector3.up * 50.0f, transform.position - Vector3.up + Vector3.right);
+            rbody.AddRelativeForce(transform.up * 100, ForceMode.Force);
+            // rbody.AddRelativeTorque(-transform.up, ForceMode.Force);
+            //isMoving = true;
+        }
+
+        //if (GetDPadUpButton())
+        //{
+        //    Debug.Log("UP");
+        // }
+
+        //if (isMoving)
+        //{
+
+        //    transform.position = new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z);
+        //}
     }
 
+    void FixedUpdate()
+    {
+        
+
+
+    }
 
     #region DPad Controls
     bool GetDPadUpButton()
