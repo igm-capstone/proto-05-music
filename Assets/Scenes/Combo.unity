@@ -1053,7 +1053,7 @@ MonoBehaviour:
   moveSpeed: .00999999978
   startPos: {fileID: 2051602452}
   endPos: {fileID: 585442615}
-  health: 5
+  health: 100
 --- !u!23 &2123649371
 MeshRenderer:
   m_ObjectHideFlags: 0
