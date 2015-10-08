@@ -5,7 +5,6 @@ using System.Collections;
 
 public class PercussionBehavior : MonoBehaviour
 {
-
     private const float DPAD_UP     = +1.0f;
     private const float DPAD_DOWN   = -1.0f;
     private const float DPAD_RIGHT  = +1.0f;
@@ -16,11 +15,8 @@ public class PercussionBehavior : MonoBehaviour
     private float dPadX;
     private float dPadY;
 
-    private float h = 0.0f;
-    private float v = 0.0f;
-
-    private bool isMoving;
-    private int frameCount;
+    public float JumpSpeed      = 100.0f;
+    public float MovementSpeed  = 20.0f;
 
     public Rigidbody rbody;
 	// Use this for initialization
@@ -38,55 +34,24 @@ public class PercussionBehavior : MonoBehaviour
         dPadX = Input.GetAxis("DPadX");
         dPadY = Input.GetAxis("DPadY");
 
-        //if (Input.GetButtonDown("B"))
-        //{
-        //    isMoving = true;
-        //}
-
-        //if (Input.GetButtonUp("B"))
-        //{
-        //    isMoving = false;
-        //}
-
-        //if (GetDPadRightButtonDown())
-        //{
-        //    h = 1.0f;
-        //    v = 0.0f;
-        //}
-
-        //if (GetDPadUpButtonDown())
-        //{
-        //    h = 0.0f;
-        //    v = 1.0f;
-        //}
-
-
-        if (Input.GetButtonDown("B") || GetDPadRightButtonDown())
+        Vector3 velocity = Vector3.zero;
+        if (GetDPadRightButton())
         {
-            //rbody.AddForceAtPosition(Vector3.up * 50.0f, transform.position - Vector3.up + Vector3.right);
-            rbody.AddForce(Vector3.right * 100, ForceMode.Force);
-            //  rbody.AddRelativeTorque(transform.right * 100, ForceMode.Force);
-            //isMoving = true;
+            velocity = Vector3.right;
         }
 
-        if (Input.GetButtonDown("Y") || GetDPadUpButtonDown())
+        if (GetDPadLeftButton())
         {
-            //rbody.AddForceAtPosition(Vector3.up * 50.0f, transform.position - Vector3.up + Vector3.right);
-            rbody.AddRelativeForce(transform.up * 100, ForceMode.Force);
-            // rbody.AddRelativeTorque(-transform.up, ForceMode.Force);
-            //isMoving = true;
+            velocity = -Vector3.right;
         }
 
-        //if (GetDPadUpButton())
-        //{
-        //    Debug.Log("UP");
-        // }
 
-        //if (isMoving)
-        //{
+        rbody.velocity = velocity * MovementSpeed;
 
-        //    transform.position = new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z);
-        //}
+        if (Input.GetButtonDown("A"))
+        {
+            rbody.AddForce(Vector3.up * JumpSpeed, ForceMode.VelocityChange);
+        }
     }
 
     void FixedUpdate()
