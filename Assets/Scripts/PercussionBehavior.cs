@@ -5,7 +5,6 @@ using System.Collections;
 
 public class PercussionBehavior : MonoBehaviour
 {
-
     private const float DPAD_UP     = +1.0f;
     private const float DPAD_DOWN   = -1.0f;
     private const float DPAD_RIGHT  = +1.0f;
@@ -16,9 +15,14 @@ public class PercussionBehavior : MonoBehaviour
     private float dPadX;
     private float dPadY;
 
+    public float JumpSpeed      = 100.0f;
+    public float MovementSpeed  = 20.0f;
+
+    public Rigidbody rbody;
 	// Use this for initialization
-	void Start () {
-	
+	void Start ()
+    {
+        rbody = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
@@ -29,8 +33,33 @@ public class PercussionBehavior : MonoBehaviour
 
         dPadX = Input.GetAxis("DPadX");
         dPadY = Input.GetAxis("DPadY");
+
+        Vector3 velocity = Vector3.zero;
+        if (GetDPadRightButton())
+        {
+            velocity = Vector3.right;
+        }
+
+        if (GetDPadLeftButton())
+        {
+            velocity = -Vector3.right;
+        }
+
+
+        rbody.velocity = velocity * MovementSpeed;
+
+        if (Input.GetButtonDown("A"))
+        {
+            rbody.AddForce(Vector3.up * JumpSpeed, ForceMode.VelocityChange);
+        }
     }
 
+    void FixedUpdate()
+    {
+        
+
+
+    }
 
     #region DPad Controls
     bool GetDPadUpButton()
