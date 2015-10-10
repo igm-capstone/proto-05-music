@@ -18,25 +18,17 @@ public class AninTestControl : MonoBehaviour
     void Update()
     {
 
-        if(Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D))
         {
             animtr.SetBool("Moving", true);
-            transform.position += new Vector3(0.1f, 0);
-            if (!isFacingRight) FlipModel();
+            //transform.position += new Vector3(0.1f, 0);
         }
-
-        else if (Input.GetKey(KeyCode.A))
-        {
-            animtr.SetBool("Moving", true);
-            transform.position -= new Vector3(0.1f, 0);
-            if (isFacingRight) FlipModel();
-        }
-
         else
         {
             animtr.SetBool("Moving", false);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+
+            if (Input.GetKeyDown(KeyCode.Space))
         {
             animtr.SetBool("Attack1Trigger", true);
         }
@@ -45,13 +37,4 @@ public class AninTestControl : MonoBehaviour
             animtr.SetBool("Attack1Trigger", false);
         }
     }
-
-    void FlipModel()
-    {
-        transform.localScale = new Vector3(-1.0f * transform.localScale.x, 
-                                           transform.localScale.y,
-                                           transform.localScale.z);
-        isFacingRight = !isFacingRight;
-    }
-
 }
