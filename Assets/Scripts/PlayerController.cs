@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     bool isShortJump;
     bool hasDoubleJump;
     float jumpTimeout;
-
+    public GameObject Model;
 
     private Animator animator;
     private CharacterController2D controller;
@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
             
             if (controller.isGrounded)
             {
+                Model.GetComponent<Animator>().SetBool("Moving", true);
                 //animator.Play(run);
             }
         }
@@ -63,11 +64,13 @@ public class PlayerController : MonoBehaviour
 
             if (controller.isGrounded)
             {
+                Model.GetComponent<Animator>().SetBool("Moving", true);
                 //animator.Play(run);
             }
         }
         else
         {
+            Model.GetComponent<Animator>().SetBool("Moving", false);
             velocity.x = Mathf.Lerp(velocity.x, 0, acceleration * Time.deltaTime);
         }
 
