@@ -32,6 +32,22 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController2D>();
     }
 
+    void Start()
+    {
+        controller.onTriggerEnterEvent += OnTriggerEnterPlayAudio;
+    }
+
+    void OnTriggerEnterPlayAudio(Collider2D other)
+    {
+        if (other.tag == "Audio")
+        {
+            if (other.GetComponent<CollectibleBehavior>() != null)
+            {
+                other.GetComponent<CollectibleBehavior>().PlayAudio(gameObject.GetComponent<Collider2D>());    
+            }
+        }
+    }
+
     void Update()
     {
         var acceleration = airAcceleration;

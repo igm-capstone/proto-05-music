@@ -2,11 +2,11 @@
 using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Collider2D))]
 
 public class CollectibleBehavior : MonoBehaviour
 {
-    public Collider     m_Collider;
+    public Collider2D m_Collider;
     public AudioSource  m_audioSource;
     public bool         m_AnimatesPlayer;
     private ComposerBehaviour jukebox;
@@ -14,14 +14,14 @@ public class CollectibleBehavior : MonoBehaviour
 	void Start ()
     {
         m_audioSource   = GetComponent<AudioSource>();
-        m_Collider      = GetComponent<Collider>();
+        m_Collider      = GetComponent<Collider2D>();
         jukebox         = FindObjectOfType<ComposerBehaviour>();
 	}
 
-    public void OnTriggerEnter(Collider other)
-    {
+    public void PlayAudio(Collider2D player)
+    {        
         Vector3 direction = Quaternion.AngleAxis(transform.rotation.z, Vector3.forward) * Vector3.right;
-        Vector3 p0 = other.gameObject.transform.position;
+        Vector3 p0 = player.gameObject.transform.position;
         Vector3 p1 = p0 + direction.normalized * Vector3.Dot(m_Collider.bounds.extents, direction.normalized) * 2.0f;
 
         //Adding both regardlessly for now, may revisit later
@@ -30,7 +30,7 @@ public class CollectibleBehavior : MonoBehaviour
 
         if (m_AnimatesPlayer)
         {
-            StartCoroutine(InterpolatePlayerPosition(other.gameObject, p0, p1));
+            StartCoroutine(InterpolatePlayerPosition(player.gameObject, p0, p1));
         }
         else
         {
