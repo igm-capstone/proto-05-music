@@ -20,14 +20,23 @@ public class PlayerController : MonoBehaviour
     bool isAboutToJump;
     bool isShortJump;
     bool hasDoubleJump;
+    bool hasWallJump;
     float jumpTimeout;
-    public GameObject Model;
 
+    // grip parameters
+    public AnimationCurve gripCurve;
+    public float gripForce = -25f;
+    public float gripDuration = 1f;
+    public bool canWallJump = true;
+    float remainingGripDuration;
+
+    private Transform model;
     private Animator animator;
     private CharacterController2D controller;
 
     void Awake()
     {
+        model = transform.Find("Model");
         animator = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController2D>();
     }
@@ -50,43 +59,56 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        var isMovingLeft = Input.GetKey(KeyCode.LeftArrow);
+        var isMovingRight = Input.GetKey(KeyCode.RightArrow);
+        var isMoving = isMovingLeft || isMovingRight;
+
         var acceleration = airAcceleration;
         var velocity = controller.velocity;
         if (controller.isGrounded)
         {
             velocity.y = 0;
             acceleration = groundAcceleration;
+            remainingGripDuration = gripDuration;
 
             if (canDoubleJump)
             {
                 hasDoubleJump = true;
             }
-
         }
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (isMovingRight)
         {
+            // TODO: next time, try using SmoothDump
             velocity.x = Mathf.Lerp(velocity.x, RunSpeed, acceleration * Time.deltaTime);
             
             if (controller.isGrounded)
             {
-                Model.GetComponent<Animator>().SetBool("Moving", true);
+                animator.SetBool("Moving", true);
                 //animator.Play(run);
             }
+
+            var euler = model.eulerAngles;
+            euler.y = 90;
+            model.eulerAngles = euler;
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if (isMovingLeft)
         {
             velocity.x = Mathf.Lerp(velocity.x, -RunSpeed, acceleration * Time.deltaTime);
 
             if (controller.isGrounded)
             {
-                Model.GetComponent<Animator>().SetBool("Moving", true);
+                animator.SetBool("Moving", true);
                 //animator.Play(run);
             }
+
+            var euler = model.eulerAngles;
+            euler.y = -90;
+            model.eulerAngles = euler;
         }
         else
         {
-            Model.GetComponent<Animator>().SetBool("Moving", false);
+            animator.SetBool("Moving", false);
             velocity.x = Mathf.Lerp(velocity.x, 0, acceleration * Time.deltaTime);
         }
 
@@ -97,6 +119,18 @@ public class PlayerController : MonoBehaviour
                 jumpTimeout = jumpPrepTime;
                 animator.SetTrigger("Jump");
                 isAboutToJump = true;
+                remainingGripDuration = gripDuration;
+            }
+            else if (hasWallJump)
+            {
+                jumpTimeout = 0;
+                animator.SetTrigger("Jump");
+                isAboutToJump = true;
+                hasWallJump = false;
+                remainingGripDuration = gripDuration;
+                velocity.x = RunSpeed * (controller.collisionState.lastGripLeft ? 1 : -1);
+
+                Debug.Log("Wall");
             }
             else if (hasDoubleJump)
             {
@@ -104,7 +138,11 @@ public class PlayerController : MonoBehaviour
                 animator.SetTrigger("Jump");
                 isAboutToJump = true;
                 hasDoubleJump = false;
+                remainingGripDuration = gripDuration;
+
+                Debug.Log("Double");
             }
+
         }
         
         if (isAboutToJump)
@@ -129,8 +167,23 @@ public class PlayerController : MonoBehaviour
 
         animator.SetFloat("FallSpeed", velocity.y);
         animator.SetBool("IsGrounded", controller.isGrounded);
-
+        
         velocity.y += Gravity * Time.deltaTime;
+
+        if (isMoving && controller.isGripped && velocity.y < 0)
+        {
+            var grip = gripCurve.Evaluate(1 - remainingGripDuration / gripDuration) * gripForce;
+            velocity.y = Mathf.Lerp(velocity.y, 0, grip * Time.deltaTime);
+            
+            remainingGripDuration = Mathf.Clamp(remainingGripDuration - Time.deltaTime, 0, gripDuration);
+
+            if (canWallJump)
+            {
+                hasWallJump = true;
+                hasDoubleJump = false;
+            }
+        }
+
         controller.Move(velocity * Time.deltaTime);
     }
 }

@@ -882,7 +882,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 143064}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 198.25, y: -11.4499998, z: 0}
+  m_LocalPosition: {x: -2.08999991, y: -1.02999997, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 486026}
@@ -1605,6 +1605,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
+  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -1636,9 +1637,9 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: -.0599999987, y: 1.00999999}
+  m_Offset: {x: .0399999991, y: 1}
   serializedVersion: 2
-  m_Size: {x: 1.45000005, y: 2.04999995}
+  m_Size: {x: 1.07000005, y: 2}
 --- !u!81 &8133480
 AudioListener:
   m_ObjectHideFlags: 1
@@ -1683,13 +1684,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Gravity: -70
   RunSpeed: 20
-  airAcceleration: 35
-  groundAcceleration: 50
-  shortJumpHeight: 2
-  longJumpHeight: 3
-  jumpPrepTime: 0
+  airAcceleration: 5
+  groundAcceleration: 20
+  shortJumpHeight: 3
+  longJumpHeight: 5
+  jumpPrepTime: .150000006
   canDoubleJump: 1
-  Model: {fileID: 119838}
+  gripCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: -.00640397705
+      outSlope: -.00640397705
+      tangentMode: 0
+    - time: .500495017
+      value: 1
+      inSlope: .0585904121
+      outSlope: -5.17414951
+      tangentMode: 1
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  gripForce: 80
+  gripDuration: .5
+  canWallJump: 1
 --- !u!114 &11486280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1712,6 +1735,9 @@ MonoBehaviour:
   oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 0
+  gripPlatformMask:
+    serializedVersion: 2
+    m_Bits: 1
   slopeLimit: 30
   jumpingThreshold: .0700000003
   slopeSpeedMultiplier:
