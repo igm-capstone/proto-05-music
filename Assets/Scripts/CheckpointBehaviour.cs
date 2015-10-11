@@ -35,7 +35,7 @@ public class CheckpointBehaviour : MonoBehaviour
                 break;
         }
     }
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         ComposerBehaviour jukebox = FindObjectOfType<ComposerBehaviour>();
 
