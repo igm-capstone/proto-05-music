@@ -4,45 +4,45 @@ using System.Collections;
 public class AttackEvent : MonoBehaviour 
 {
     private bool attack = false;
-    private Transform enemy;
     private string key = null;
-    private float damage = 1f;
-    private GameObject star;
+    private float origGravity;
     private Vector3 playerPosBeforeAttack;
-    public float hitDist, AttackSpeed;
+    
+    private Transform enemy;
+    private GameObject star;
+
+    public float hitDist, AttackSpeed, damage;
     public AudioSource a1, a2, a3, a4;
-	
-    void Start()
-    {
-        star = GameObject.Find("Star");
-    }
+
     void Update () 
     {
         AttackActive();
         if (attack == true && key != null)
+        {
             AttackMovePlayer(key);
+        }
 	}
 
     private void AttackActive()
     {
         if (attack == true)
         {
-            if (Input.GetButtonDown("A"))
+            if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.W))
             {
                 a1.Play();
                 HitEffects("A",Color.red);
             }
-            if (Input.GetButtonDown("B"))
+            if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.A))
             {
                 a2.Play();
                 HitEffects("B", Color.yellow);
             }
-            if (Input.GetButtonDown("X"))
+            if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.S))
             {
                 a3.Play();
                 HitEffects("X", Color.white);
             }
-            if (Input.GetButtonDown("Y"))
+            if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.D))
             {
                 a4.Play();
                 HitEffects("Y", Color.blue);
@@ -83,19 +83,20 @@ public class AttackEvent : MonoBehaviour
         transform.position = Vector3.Lerp(gameObject.transform.position,destination, AttackSpeed);
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void TriggerEvent(Collider2D other)
     {
-        if (other.tag == "Enemy")
-        {
-            enemy = other.gameObject.transform;
-            attack = true;
-            playerPosBeforeAttack = gameObject.transform.position;
-        }
+        origGravity = GetComponent<PlayerController>().Gravity;
+        GetComponent<PlayerController>().Gravity = 0;
+        enemy = other.gameObject.transform;
+        star = enemy.FindChild("Star").gameObject;
+        attack = true;
+        playerPosBeforeAttack = gameObject.transform.position;
     }
 
     public void StopAttack()
     {
         attack = false;
         gameObject.transform.position = playerPosBeforeAttack;
+        GetComponent<PlayerController>().Gravity = origGravity;
     }
 }
