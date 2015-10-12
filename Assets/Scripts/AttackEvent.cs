@@ -85,6 +85,8 @@ public class AttackEvent : MonoBehaviour
 
     public void TriggerEvent(Collider2D other)
     {
+        GameObject.FindWithTag("Jukebox").GetComponent<ComposerBehaviour>().StartSoloRecording();
+        other.GetComponent<Collider2D>().enabled = false;
         origGravity = GetComponent<PlayerController>().Gravity;
         GetComponent<PlayerController>().Gravity = 0;
         enemy = other.gameObject.transform;
@@ -96,6 +98,7 @@ public class AttackEvent : MonoBehaviour
     public void StopAttack()
     {
         attack = false;
+        GameObject.FindWithTag("Jukebox").GetComponent<ComposerBehaviour>().StopSoloRecording();
         gameObject.transform.position = playerPosBeforeAttack;
         GetComponent<PlayerController>().Gravity = origGravity;
     }
