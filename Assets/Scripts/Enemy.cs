@@ -22,7 +22,6 @@ public class Enemy : MonoBehaviour
             GameObject.FindWithTag("Player").GetComponent<AttackEvent>().StopAttack();
             gameObject.transform.parent.gameObject.SetActive(false);
         }
-        Debug.Log(health);
     }
 
     public void HitEnemy(float damage)

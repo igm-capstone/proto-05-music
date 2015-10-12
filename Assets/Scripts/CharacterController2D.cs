@@ -28,6 +28,9 @@ namespace Prime31
             public bool below;
             public bool becameGroundedThisFrame;
             public bool wasGroundedLastFrame;
+            public bool grip;
+            public bool lastGripLeft;
+            public bool lastGripRight;
             public bool movingDownSlope;
             public float slopeAngle;
 
@@ -40,7 +43,7 @@ namespace Prime31
 
             public void reset()
             {
-                right = left = above = below = becameGroundedThisFrame = movingDownSlope = false;
+                right = left = above = below = becameGroundedThisFrame = movingDownSlope = grip = false;
                 slopeAngle = 0f;
             }
 
@@ -105,6 +108,12 @@ namespace Prime31
         LayerMask oneWayPlatformMask = 0;
 
         /// <summary>
+        /// mask with all layers that should act as grip walls. Note that all grip layers will considered platforms in order to properly handle collision dettection.
+        /// </summary>
+        [SerializeField]
+        LayerMask gripPlatformMask = 0;
+
+        /// <summary>
         /// the max slope angle that the CC2D can climb
         /// </summary>
         /// <value>The slope limit.</value>
@@ -153,6 +162,7 @@ namespace Prime31
         [NonSerialized]
         public Vector3 velocity;
         public bool isGrounded { get { return collisionState.below; } }
+        public bool isGripped { get { return collisionState.grip; } }
 
         const float kSkinWidthFloatFudgeFactor = 0.001f;
 
@@ -189,7 +199,8 @@ namespace Prime31
         void Awake()
         {
             // add our one-way platforms to our normal platform mask so that we can land on them from above
-            platformMask |= oneWayPlatformMask;
+            // also, add our grip platforms to our normal platform mask so that we can colide with grip walls
+            platformMask |= oneWayPlatformMask | gripPlatformMask;
 
             // cache some components
             transform = GetComponent<Transform>();
@@ -246,7 +257,7 @@ namespace Prime31
         /// stop when run into.
         /// </summary>
         /// <param name="deltaMovement">Delta movement.</param>
-        public void Move(Vector3 deltaMovement)
+        public void Move(Vector2 deltaMovement)
         {
             // save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
             collisionState.wasGroundedLastFrame = collisionState.below;
@@ -355,7 +366,7 @@ namespace Prime31
         /// we have to increase the ray distance skinWidth then remember to remove skinWidth from deltaMovement before
         /// actually moving the player
         /// </summary>
-        void moveHorizontally(ref Vector3 deltaMovement)
+        void moveHorizontally(ref Vector2 deltaMovement)
         {
             var isGoingRight = deltaMovement.x > 0;
             var rayDistance = Mathf.Abs(deltaMovement.x) + _skinWidth;
@@ -400,6 +411,22 @@ namespace Prime31
                         collisionState.left = true;
                     }
 
+                    var hitGripLayer = ((1 << _raycastHit.transform.gameObject.layer) & gripPlatformMask) != 0;
+                    if (hitGripLayer)
+                    {
+                        collisionState.grip = true;
+                        if (isGoingRight)
+                        {
+                            collisionState.lastGripLeft = false;
+                            collisionState.lastGripRight = true;
+                        }
+                        else
+                        {
+                            collisionState.lastGripLeft = true;
+                            collisionState.lastGripRight = false;
+                        }
+                    }
+
                     _raycastHitsThisFrame.Add(_raycastHit);
 
                     // we add a small fudge factor for the float operations here. if our rayDistance is smaller
@@ -417,7 +444,7 @@ namespace Prime31
         /// <returns><c>true</c>, if horizontal slope was handled, <c>false</c> otherwise.</returns>
         /// <param name="deltaMovement">Delta movement.</param>
         /// <param name="angle">Angle.</param>
-        bool handleHorizontalSlope(ref Vector3 deltaMovement, float angle)
+        bool handleHorizontalSlope(ref Vector2 deltaMovement, float angle)
         {
             // disregard 90 degree angles (walls)
             if (Mathf.RoundToInt(angle) == 90)
@@ -472,7 +499,7 @@ namespace Prime31
         }
 
 
-        void moveVertically(ref Vector3 deltaMovement)
+        void moveVertically(ref Vector2 deltaMovement)
         {
             var isGoingUp = deltaMovement.y > 0;
             var rayDistance = Mathf.Abs(deltaMovement.y) + _skinWidth;
@@ -532,7 +559,7 @@ namespace Prime31
         /// the player stays grounded and the slopeSpeedModifier is taken into account to speed up movement.
         /// </summary>
         /// <param name="deltaMovement">Delta movement.</param>
-        private void handleVerticalSlope(ref Vector3 deltaMovement)
+        private void handleVerticalSlope(ref Vector2 deltaMovement)
         {
             // slope check from the center of our collider
             var centerOfCollider = (_raycastOrigins.bottomLeft.x + _raycastOrigins.bottomRight.x) * 0.5f;
