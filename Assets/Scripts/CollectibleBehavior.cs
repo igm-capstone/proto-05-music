@@ -11,7 +11,7 @@ public class CollectibleBehavior : MonoBehaviour
     public bool         m_AnimatesPlayer;
     private ComposerBehaviour jukebox;
 
-    public float lengthInBeats = 0.5f;
+    public float lengthInBeats = 1.0f;
 
 	void Start ()
     {

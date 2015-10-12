@@ -24,7 +24,7 @@ public class ComposerBehaviour : MonoBehaviour
 {
     private List<SoundAction> composition;
     private AudioSource[] speakers;
-    public int playbackBPM = 120;
+    public int playbackBPM = 60;
     
     private int maxSpeakers = 10;
 
