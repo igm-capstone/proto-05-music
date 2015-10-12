@@ -63,8 +63,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        var isMovingLeft = Input.GetKey(KeyCode.LeftArrow);
-        var isMovingRight = Input.GetKey(KeyCode.RightArrow);
+        var horizontal = Input.GetAxis("Horizontal");
+        var isMovingLeft = horizontal < 0f;
+        var isMovingRight = horizontal > 0f;
         var isMoving = isMovingLeft || isMovingRight;
 
         var acceleration = airAcceleration;
@@ -120,7 +121,7 @@ public class PlayerController : MonoBehaviour
             velocity.x = Mathf.Lerp(velocity.x, 0, acceleration * Time.deltaTime);
         }
 
-        if (!isAboutToJump && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)))
+        if (!isAboutToJump && Input.GetButtonDown("Jump"))
 
         {
             if (controller.isGrounded)
@@ -156,7 +157,7 @@ public class PlayerController : MonoBehaviour
         
         if (isAboutToJump)
         {
-            if (Input.GetKeyUp(KeyCode.UpArrow))
+            if (Input.GetButtonDown("Jump"))
             {
                 // short jump!
                 isShortJump = true;
