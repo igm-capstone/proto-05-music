@@ -6,13 +6,13 @@ using System.Collections;
 
 public class CollectibleBehavior : MonoBehaviour
 {
-    public Collider2D m_Collider;
+    public Collider2D   m_Collider;
     public AudioSource  m_audioSource;
     public bool         m_AnimatesPlayer;
     private ComposerBehaviour jukebox;
 
-    public float lengthInBeats = 1.0f;
-
+    public float lengthInBeats  = 1.0f;
+    private bool m_isCollected   = false;
 	void Start ()
     {
         m_audioSource   = GetComponent<AudioSource>();
@@ -22,23 +22,28 @@ public class CollectibleBehavior : MonoBehaviour
 
     public void PlayAudio(Collider2D player)
     {
-        Vector3 direction = Quaternion.AngleAxis(transform.rotation.z, Vector3.forward)* Vector3.right;
-
-        Vector3 p0 = player.gameObject.transform.position;
-        Vector3 p1 = p0 + direction.normalized * Vector3.Dot(m_Collider.bounds.extents, direction.normalized) * 2.0f;
-
-        //Adding both regardlessly for now, may revisit later
-        jukebox.AddSingleSound(this);
-        jukebox.AddToSoloRecording(m_audioSource);
-
-        if (m_AnimatesPlayer)
+        if (!m_isCollected)
         {
-            StartCoroutine(InterpolatePlayerPosition(player.gameObject, p0, p1));
+            Hide();
 
-        }
-        else
-        {
-            m_audioSource.Play();
+            Vector3 direction = Quaternion.AngleAxis(transform.rotation.z, Vector3.forward) * Vector3.right;
+
+            Vector3 p0 = player.gameObject.transform.position;
+            Vector3 p1 = p0 + direction.normalized * Vector3.Dot(m_Collider.bounds.extents, direction.normalized) * 2.0f;
+
+            //Adding both regardlessly for now, may revisit later
+            jukebox.AddSingleSound(this);
+            jukebox.AddToSoloRecording(m_audioSource);
+
+            if (m_AnimatesPlayer)
+            {
+                StartCoroutine(InterpolatePlayerPosition(player.gameObject, p0, p1));
+
+            }
+            else
+            {
+                m_audioSource.Play();
+            }
         }
     }
 
@@ -60,5 +65,12 @@ public class CollectibleBehavior : MonoBehaviour
         }
         // Ends Dashing Animation
         plyrAnim.SetBool("isDashing", false);
+    }
+
+    private void Hide()
+    {
+        // Comment out to play more than once.
+        m_isCollected = true;
+        GetComponent<MeshRenderer>().enabled = false;
     }
 }
