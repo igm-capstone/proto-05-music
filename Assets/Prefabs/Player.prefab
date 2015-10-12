@@ -882,7 +882,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 143064}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.08999991, y: -1.02999997, z: 0}
+  m_LocalPosition: {x: 1.21000004, y: .219999999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 486026}
@@ -1605,7 +1605,6 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -1683,11 +1682,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Gravity: -70
-  RunSpeed: 20
+  RunSpeed: 23
   airAcceleration: 5
-  groundAcceleration: 20
-  shortJumpHeight: 3
-  longJumpHeight: 5
+  groundAcceleration: 50
+  shortJumpHeight: 2
+  longJumpHeight: 4
   jumpPrepTime: .150000006
   canDoubleJump: 1
   gripCurve:
@@ -1734,11 +1733,11 @@ MonoBehaviour:
     m_Bits: 512
   oneWayPlatformMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   gripPlatformMask:
     serializedVersion: 2
-    m_Bits: 1
-  slopeLimit: 30
+    m_Bits: 4097
+  slopeLimit: 85
   jumpingThreshold: .0700000003
   slopeSpeedMultiplier:
     serializedVersion: 2
