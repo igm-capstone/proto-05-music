@@ -59,13 +59,20 @@ public class PlayerController : MonoBehaviour
             if (gameObject.GetComponent<AttackEvent>() != null)
                 gameObject.GetComponent<AttackEvent>().TriggerEvent(other.GetComponent<Collider2D>());
         }
+
+        if (other.tag == "Goal")
+            GameObject.FindObjectOfType<ComposerBehaviour>().PlayComposition();
     }
 
     void Update()
     {
-        var horizontal = Input.GetAxis("Horizontal");
-        var isMovingLeft = horizontal < 0f;
-        var isMovingRight = horizontal > 0f;
+        //var horizontal = Input.GetAxis("Horizontal");
+        //var isMovingLeft = horizontal < 0f;
+        //var isMovingRight = horizontal > 0f;
+        //var isMoving = isMovingLeft || isMovingRight;
+
+        var isMovingLeft = Input.GetKey(KeyCode.LeftArrow);
+        var isMovingRight = Input.GetKey(KeyCode.RightArrow);
         var isMoving = isMovingLeft || isMovingRight;
 
         var acceleration = airAcceleration;

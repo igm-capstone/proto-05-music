@@ -14,6 +14,12 @@ public class AttackEvent : MonoBehaviour
     public float hitDist, AttackSpeed, damage;
     public AudioSource a1, a2, a3, a4;
 
+    private ComposerBehaviour jukebox;
+
+    void Start() {
+        jukebox = FindObjectOfType<ComposerBehaviour>();
+    }
+
     void Update () 
     {
         AttackActive();
@@ -30,21 +36,25 @@ public class AttackEvent : MonoBehaviour
             if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.W))
             {
                 a1.Play();
+                jukebox.AddToSoloRecording(a1);
                 HitEffects("A",Color.red);
             }
             if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.A))
             {
                 a2.Play();
+                jukebox.AddToSoloRecording(a2);
                 HitEffects("B", Color.yellow);
             }
             if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.S))
             {
                 a3.Play();
+                jukebox.AddToSoloRecording(a3);
                 HitEffects("X", Color.white);
             }
             if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.D))
             {
                 a4.Play();
+                jukebox.AddToSoloRecording(a4);
                 HitEffects("Y", Color.blue);
             }
         }
@@ -85,7 +95,7 @@ public class AttackEvent : MonoBehaviour
 
     public void TriggerEvent(Collider2D other)
     {
-        GameObject.FindWithTag("Jukebox").GetComponent<ComposerBehaviour>().StartSoloRecording();
+        jukebox.StartSoloRecording();
         other.GetComponent<Collider2D>().enabled = false;
         origGravity = GetComponent<PlayerController>().Gravity;
         GetComponent<PlayerController>().Gravity = 0;
@@ -98,7 +108,7 @@ public class AttackEvent : MonoBehaviour
     public void StopAttack()
     {
         attack = false;
-        GameObject.FindWithTag("Jukebox").GetComponent<ComposerBehaviour>().StopSoloRecording();
+        jukebox.StopSoloRecording();
         gameObject.transform.position = playerPosBeforeAttack;
         GetComponent<PlayerController>().Gravity = origGravity;
     }
