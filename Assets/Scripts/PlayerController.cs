@@ -30,6 +30,14 @@ public class PlayerController : MonoBehaviour
     public bool canWallJump = true;
     float remainingGripDuration;
 
+    // dash parameters
+    private AnimationCurve dashCurve;
+    private Vector2 dashFrom;
+    private Vector2 dashTo;
+    private float dashDuration;
+    private float elapsedDashDuration;
+    private bool isDashing;
+
     private Transform model;
     private Animator animator;
     private CharacterController2D controller;
@@ -48,17 +56,29 @@ public class PlayerController : MonoBehaviour
 
     void TriggerEnterEvent(Collider2D other)
     {
-        if (other.tag == "Audio")
-        {
-            if (other.GetComponent<CollectibleBehavior>() != null)
-                other.GetComponent<CollectibleBehavior>().PlayAudio(gameObject.GetComponent<Collider2D>());
-        }
+        var audio = other.GetComponent<CollectibleBehavior>();
+        if (audio != null)
+            audio.PlayAudio(gameObject.GetComponent<Collider2D>());
 
-        if (other.tag == "Enemy")
-        {
-            if (gameObject.GetComponent<AttackEvent>() != null)
-                gameObject.GetComponent<AttackEvent>().TriggerEvent(other.GetComponent<Collider2D>());
-        }
+        var attack = gameObject.GetComponent<AttackEvent>();
+        if (attack != null)
+            attack.TriggerEvent(other.GetComponent<Collider2D>());
+
+        var dash = other.GetComponent<DashTrigger>();
+        if (dash != null)
+            dash.StartDash(gameObject.GetComponent<Collider2D>());
+    }
+
+    public void DashTo(Vector2 target, float duration, AnimationCurve curve = null)
+    {
+        dashCurve = curve ?? AnimationCurve.Linear(0, 0, 1, 1);
+        isDashing = true;
+        dashDuration = duration;
+        elapsedDashDuration = 0;
+        dashTo = target;
+        dashFrom = transform.position;
+
+        animator.SetBool("isDashing", true);
     }
 
     void Update()
@@ -67,6 +87,29 @@ public class PlayerController : MonoBehaviour
         var isMovingLeft = horizontal < 0f;
         var isMovingRight = horizontal > 0f;
         var isMoving = isMovingLeft || isMovingRight;
+
+        if (isDashing)
+        {
+
+            float t = elapsedDashDuration / dashDuration;
+
+            if (t >= 1)
+            {
+                t = 1;
+                isDashing = false;
+                animator.SetBool("isDashing", false);
+            }
+
+
+            var newPosition = Vector3.Lerp(dashFrom, dashTo, dashCurve.Evaluate(t));
+            var deltaMovement = newPosition - transform.position;
+
+            controller.Move(deltaMovement);
+            elapsedDashDuration += Time.deltaTime;
+
+            return;
+        }
+
 
         var acceleration = airAcceleration;
         var velocity = controller.velocity;

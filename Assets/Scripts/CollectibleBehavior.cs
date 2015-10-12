@@ -38,6 +38,7 @@ public class CollectibleBehavior : MonoBehaviour
         }
         else
         {
+            Debug.Log("Playing");
             m_audioSource.Play();
         }
     }
