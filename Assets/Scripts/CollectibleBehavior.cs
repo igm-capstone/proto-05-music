@@ -28,7 +28,7 @@ public class CollectibleBehavior : MonoBehaviour
         Vector3 p1 = p0 + direction.normalized * Vector3.Dot(m_Collider.bounds.extents, direction.normalized) * 2.0f;
 
         //Adding both regardlessly for now, may revisit later
-        jukebox.AddSingleSound(m_audioSource);
+        jukebox.AddSingleSound(this);
         jukebox.AddToSoloRecording(m_audioSource);
 
         if (m_AnimatesPlayer)

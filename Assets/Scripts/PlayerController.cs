@@ -174,8 +174,8 @@ public class PlayerController : MonoBehaviour
             jumpTimeout -= Time.deltaTime;
         }
 
-        animator.SetFloat("FallSpeed", velocity.y);
-        animator.SetBool("IsGrounded", controller.isGrounded);
+        //animator.SetFloat("FallSpeed", velocity.y);
+        //animator.SetBool("IsGrounded", controller.isGrounded);
         
         velocity.y += Gravity * Time.deltaTime;
 

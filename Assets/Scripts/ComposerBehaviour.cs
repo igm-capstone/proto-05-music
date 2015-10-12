@@ -8,6 +8,7 @@ public struct Sound
 {
     public float timeStamp;
     public AudioClip audioClip;
+    public float lengthInBeats;
 }
 
 public class SoundAction
@@ -19,12 +20,31 @@ public class SoundAction
     public List<Sound> solo;
 }
 
-[RequireComponent(typeof(AudioSource))]
 public class ComposerBehaviour : MonoBehaviour
 {
     private List<SoundAction> composition;
-    private AudioSource myAudio;
+    private AudioSource[] speakers;
+    public int playbackBPM = 120;
+    
+    private int maxSpeakers = 10;
 
+    private int _currentSpeaker;
+    private int currentSpeaker 
+    {
+        get
+        {
+            return _currentSpeaker;
+        }
+        set
+        {
+            if (value >= maxSpeakers)
+                _currentSpeaker = 0;
+            else if (value < 0)
+                _currentSpeaker = maxSpeakers;
+            else
+                _currentSpeaker = value;
+        }
+    }
 
     SoundAction currentSolo;
     bool isRecordingSolo = false;
@@ -34,20 +54,25 @@ public class ComposerBehaviour : MonoBehaviour
     void Awake()
     {
         composition = new List<SoundAction>();
-        myAudio = GetComponent<AudioSource>();
+        speakers = new AudioSource[maxSpeakers];
+        for (int i = 0; i < maxSpeakers; i++)
+        {
+            speakers[i] = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     // Update is called once per frame
 
 
-    public void AddSingleSound(AudioSource src)
+    public void AddSingleSound(CollectibleBehavior src)
     {
         if (isPlaying) return;
         if (isRecordingSolo) return;
 
         Sound s;
         s.timeStamp = 0;
-        s.audioClip = src.clip;
+        s.audioClip = src.m_audioSource.clip;
+        s.lengthInBeats = src.lengthInBeats;
 
         SoundAction a = new SoundAction();
         a.type = 0;
@@ -79,6 +104,7 @@ public class ComposerBehaviour : MonoBehaviour
         Sound s;
         s.timeStamp = Time.time;
         s.audioClip = src.clip;
+        s.lengthInBeats = 0;
 
         currentSolo.solo.Add(s);
 
@@ -111,9 +137,8 @@ public class ComposerBehaviour : MonoBehaviour
         {
             if (a.type == 0)
             {
-                myAudio.clip = a.singleSound.audioClip;
-                myAudio.Play();
-                yield return new WaitForSeconds(a.singleSound.audioClip.length);
+                PlayInAvailableSpeaker(a.singleSound.audioClip);
+                yield return new WaitForSeconds(60.0f / (float)playbackBPM * a.singleSound.lengthInBeats);
             }
             else
             {
@@ -131,10 +156,16 @@ public class ComposerBehaviour : MonoBehaviour
         int count = a.solo.Count;
         for (int i = 0; i < count; i++)
         {
-            myAudio.clip = a.solo[i].audioClip;
-            myAudio.Play();
+            PlayInAvailableSpeaker(a.solo[i].audioClip);
             if (i != count - 1)
                 yield return new WaitForSeconds(a.solo[i+1].timeStamp - a.solo[i].timeStamp);
         }
+    }
+
+    private void PlayInAvailableSpeaker(AudioClip c)
+    {
+        speakers[currentSpeaker].clip = c;
+        speakers[currentSpeaker].Play();
+        currentSpeaker++;
     }
 }
