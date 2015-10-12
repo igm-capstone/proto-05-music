@@ -4,37 +4,56 @@ using System.Collections;
 public class AninTestControl : MonoBehaviour
 {
     Animator animtr;
-    bool isFacingRight;
+    Rigidbody rgdBdy;
+    bool OnAir;
 
     // Use this for initialization
     void Start()
     {
         animtr = GetComponentInChildren<Animator>();
-
-        if (transform.localScale.y > 0) isFacingRight = true;
+        rgdBdy = GetComponent<Rigidbody>();
+        OnAir = false;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (Input.GetKey(KeyCode.D))
+        //animtr.SetInteger("YVelocity", Mathf.RoundToInt(rgdBdy.velocity.y));
+
+        if (Input.GetKey(KeyCode.A))
         {
             animtr.SetBool("Moving", true);
-            //transform.position += new Vector3(0.1f, 0);
+            Debug.Log("Moving");
         }
         else
         {
             animtr.SetBool("Moving", false);
         }
-
-            if (Input.GetKeyDown(KeyCode.Space))
+         
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            animtr.SetBool("Attack1Trigger", true);
+            animtr.SetTrigger("LightAttack");
+            Debug.Log("LightAttack");
         }
-        else
+
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            animtr.SetBool("Attack1Trigger", false);
+            animtr.SetTrigger("HeavyAttack");
+            Debug.Log("HeavyAttack");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            animtr.SetTrigger("Dash");
+            Debug.Log("Dash");
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            animtr.SetTrigger("Jump");
+            OnAir = !OnAir;
+            animtr.SetBool("OnAir", OnAir);
+            Debug.Log("Jump");
         }
     }
 }
