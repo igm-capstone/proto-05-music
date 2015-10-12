@@ -120,7 +120,8 @@ public class PlayerController : MonoBehaviour
             velocity.x = Mathf.Lerp(velocity.x, 0, acceleration * Time.deltaTime);
         }
 
-        if (!isAboutToJump && Input.GetKeyDown(KeyCode.UpArrow))
+        if (!isAboutToJump && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)))
+
         {
             if (controller.isGrounded)
             {
