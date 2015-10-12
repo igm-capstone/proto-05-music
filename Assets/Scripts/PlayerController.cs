@@ -81,6 +81,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+
+        // Inform animator if character is airborne;
+        animator.SetBool("OnAir", !controller.isGrounded);
+
         if (isMovingRight)
         {
             // TODO: next time, try using SmoothDump
