@@ -46,7 +46,6 @@ public class CollectibleBehavior : MonoBehaviour
 
             //Adding both regardlessly for now, may revisit later
             jukebox.AddSingleSound(this);
-            jukebox.AddToSoloRecording(m_audioSource);
 
             if (m_AnimatesPlayer)
             {
