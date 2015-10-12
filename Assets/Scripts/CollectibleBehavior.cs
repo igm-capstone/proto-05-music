@@ -11,6 +11,8 @@ public class CollectibleBehavior : MonoBehaviour
     public bool         m_AnimatesPlayer;
     private ComposerBehaviour jukebox;
 
+    public float lengthInBeats = 0.5f;
+
 	void Start ()
     {
         m_audioSource   = GetComponent<AudioSource>();
