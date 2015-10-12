@@ -43,17 +43,21 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        controller.onTriggerEnterEvent += OnTriggerEnterPlayAudio;
+        controller.onTriggerEnterEvent += TriggerEnterEvent;
     }
 
-    void OnTriggerEnterPlayAudio(Collider2D other)
+    void TriggerEnterEvent(Collider2D other)
     {
         if (other.tag == "Audio")
         {
             if (other.GetComponent<CollectibleBehavior>() != null)
-            {
-                other.GetComponent<CollectibleBehavior>().PlayAudio(gameObject.GetComponent<Collider2D>());    
-            }
+                other.GetComponent<CollectibleBehavior>().PlayAudio(gameObject.GetComponent<Collider2D>());
+        }
+
+        if (other.tag == "Enemy")
+        {
+            if (gameObject.GetComponent<AttackEvent>() != null)
+                gameObject.GetComponent<AttackEvent>().TriggerEvent(other.GetComponent<Collider2D>());
         }
     }
 
