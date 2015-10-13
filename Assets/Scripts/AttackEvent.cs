@@ -18,11 +18,14 @@ public class AttackEvent : MonoBehaviour
     private GameObject Arch, Audio;
     private GameObject Cam;
 
+    private Animator MyAnim;
+
     void Start() {
         jukebox = FindObjectOfType<ComposerBehaviour>();
         Arch = GameObject.Find("Architecture");
         Audio = GameObject.Find("Audio");
         Cam = GameObject.Find("Main Camera");
+        MyAnim = GetComponentInChildren<Animator>();
     }
 
     void Update () 
@@ -38,29 +41,33 @@ public class AttackEvent : MonoBehaviour
     {
         if (attack == true)
         {
-            if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.W))
+            if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 a1.Play();
                 jukebox.AddToSoloRecording(a1);
                 HitEffects("A",Color.red);
+                MyAnim.SetTrigger("HeavyAttack");
             }
-            if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.A))
+            if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 a2.Play();
                 jukebox.AddToSoloRecording(a2);
                 HitEffects("B", Color.yellow);
+                MyAnim.SetTrigger("LightAttack");
             }
-            if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.S))
+            if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.DownArrow))
             {
                 a3.Play();
                 jukebox.AddToSoloRecording(a3);
                 HitEffects("X", Color.white);
+                MyAnim.SetTrigger("HeavyAttack");
             }
-            if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.D))
+            if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.RightArrow))
             {
                 a4.Play();
                 jukebox.AddToSoloRecording(a4);
                 HitEffects("Y", Color.blue);
+                MyAnim.SetTrigger("LightAttack");
             }
         }
         else

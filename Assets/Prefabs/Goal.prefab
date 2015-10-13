@@ -13,7 +13,7 @@ GameObject:
   - 23: {fileID: 2314594}
   - 61: {fileID: 6161260}
   m_Layer: 9
-  m_Name: JukeBox
+  m_Name: Goal
   m_TagString: Goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

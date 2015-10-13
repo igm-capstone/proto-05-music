@@ -26,6 +26,8 @@ public class DashTrigger : MonoBehaviour {
         if (!isActive)
             return;
 
+        //Vector3 direction = Quaternion.AngleAxis(transform.rotation.z, Vector3.forward) * Vector3.right;
+
         Vector3 direction = Quaternion.AngleAxis(transform.rotation.z, Vector3.forward) * Vector3.right;
 
         //Adding both regardlessly for now, may revisit later
@@ -42,11 +44,6 @@ public class DashTrigger : MonoBehaviour {
 
     IEnumerator InterpolatePlayerPosition(PlayerController player, Vector3 p0, Vector3 p1)
     {
-
-        // Start Dash Animation
-        Animator plyrAnim = player.GetComponentInChildren<Animator>();
-        plyrAnim.SetTrigger("Dash");
-        plyrAnim.SetBool("isDashing", true);
 
         // start animation next frame..
         yield return null;
