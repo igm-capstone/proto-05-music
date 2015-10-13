@@ -41,28 +41,28 @@ public class AttackEvent : MonoBehaviour
     {
         if (attack == true)
         {
-            if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.DownArrow))
             {
                 a1.Play();
                 jukebox.AddToSoloRecording(a1);
                 HitEffects("A",Color.red);
                 MyAnim.SetTrigger("HeavyAttack");
             }
-            if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.RightArrow))
             {
                 a2.Play();
                 jukebox.AddToSoloRecording(a2);
                 HitEffects("B", Color.yellow);
                 MyAnim.SetTrigger("LightAttack");
             }
-            if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 a3.Play();
                 jukebox.AddToSoloRecording(a3);
                 HitEffects("X", Color.white);
                 MyAnim.SetTrigger("HeavyAttack");
             }
-            if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.RightArrow))
+            if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 a4.Play();
                 jukebox.AddToSoloRecording(a4);
@@ -78,7 +78,7 @@ public class AttackEvent : MonoBehaviour
     {
         key = button;
         star.GetComponent<SpriteRenderer>().color = starColor;
-        GameObject.FindWithTag("Enemy").GetComponent<Enemy>().HitEnemy(damage);
+        enemy.GetComponent<Enemy>().HitEnemy(damage);
         star.GetComponent<Animator>().SetTrigger("Start");
         star.transform.localScale = new Vector3(Mathf.Lerp(1, 90, 1), Mathf.Lerp(1, 90, 1), Mathf.Lerp(1, 90, 1));
         StartCoroutine("StarWait", 0.1f);
@@ -135,7 +135,7 @@ public class AttackEvent : MonoBehaviour
         {
             Arch.SetActive(false);
             Audio.SetActive(false);
-            Cam.GetComponent<Camera>().clearFlags = CameraClearFlags.Depth;
+            Cam.GetComponent<Camera>().clearFlags = CameraClearFlags.SolidColor;
         }
         else
         {
