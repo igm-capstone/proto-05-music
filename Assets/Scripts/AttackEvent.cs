@@ -134,7 +134,7 @@ public class AttackEvent : MonoBehaviour
         if (eventCheck)
         {
             Arch.SetActive(false);
-            Audio.SetActive(false);
+            //Audio.SetActive(false);
             Cam.GetComponent<Camera>().clearFlags = CameraClearFlags.SolidColor;
         }
         else
