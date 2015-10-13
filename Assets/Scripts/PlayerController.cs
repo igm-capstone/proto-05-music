@@ -60,13 +60,18 @@ public class PlayerController : MonoBehaviour
         if (audio != null)
             audio.PlayAudio(gameObject.GetComponent<Collider2D>());
 
-        var attack = gameObject.GetComponent<AttackEvent>();
-        if (attack != null)
-            attack.TriggerEvent(other.GetComponent<Collider2D>());
+        if (other.tag == "Enemy") { 
+            var attack = gameObject.GetComponent<AttackEvent>();
+            if (attack != null)
+                attack.TriggerEvent(other.GetComponent<Collider2D>());
+        }
 
         var dash = other.GetComponent<DashTrigger>();
         if (dash != null)
             dash.StartDash(gameObject.GetComponent<Collider2D>());
+
+        if (other.tag == "Goal")
+            GameObject.FindObjectOfType<ComposerBehaviour>().PlayComposition();
     }
 
     public void DashTo(Vector2 target, float duration, AnimationCurve curve = null)
@@ -83,9 +88,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        var horizontal = Input.GetAxis("Horizontal");
-        var isMovingLeft = horizontal < 0f;
-        var isMovingRight = horizontal > 0f;
+        //var horizontal = Input.GetAxis("Horizontal");
+        //var isMovingLeft = horizontal < 0f;
+        //var isMovingRight = horizontal > 0f;
+        //var isMoving = isMovingLeft || isMovingRight;
+
+        var isMovingLeft = Input.GetKey(KeyCode.LeftArrow);
+        var isMovingRight = Input.GetKey(KeyCode.RightArrow);
         var isMoving = isMovingLeft || isMovingRight;
 
         if (isDashing)
@@ -218,8 +227,8 @@ public class PlayerController : MonoBehaviour
             jumpTimeout -= Time.deltaTime;
         }
 
-        animator.SetFloat("FallSpeed", velocity.y);
-        animator.SetBool("IsGrounded", controller.isGrounded);
+        //animator.SetFloat("FallSpeed", velocity.y);
+        //animator.SetBool("IsGrounded", controller.isGrounded);
         
         velocity.y += Gravity * Time.deltaTime;
 
