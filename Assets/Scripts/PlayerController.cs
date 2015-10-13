@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     private Transform model;
     private Animator animator;
     private CharacterController2D controller;
+    public bool eventCheck = false;
 
     void Awake()
     {
@@ -246,6 +247,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        controller.Move(velocity * Time.deltaTime);
+        if(!eventCheck)
+            controller.Move(velocity * Time.deltaTime);
     }
 }

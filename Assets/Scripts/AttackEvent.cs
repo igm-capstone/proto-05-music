@@ -15,9 +15,14 @@ public class AttackEvent : MonoBehaviour
     public AudioSource a1, a2, a3, a4;
 
     private ComposerBehaviour jukebox;
+    private GameObject Arch, Audio;
+    private GameObject Cam;
 
     void Start() {
         jukebox = FindObjectOfType<ComposerBehaviour>();
+        Arch = GameObject.Find("Architecture");
+        Audio = GameObject.Find("Audio");
+        Cam = GameObject.Find("Main Camera");
     }
 
     void Update () 
@@ -95,6 +100,8 @@ public class AttackEvent : MonoBehaviour
 
     public void TriggerEvent(Collider2D other)
     {
+        ChangeEnvironment(true);
+        GetComponent<PlayerController>().eventCheck = true;
         jukebox.StartSoloRecording();
         other.GetComponent<Collider2D>().enabled = false;
         origGravity = GetComponent<PlayerController>().Gravity;
@@ -107,9 +114,27 @@ public class AttackEvent : MonoBehaviour
 
     public void StopAttack()
     {
+        ChangeEnvironment(false);
         attack = false;
+        GetComponent<PlayerController>().eventCheck = false;
         jukebox.StopSoloRecording();
         gameObject.transform.position = playerPosBeforeAttack;
         GetComponent<PlayerController>().Gravity = origGravity;
+    }
+
+    private void ChangeEnvironment(bool eventCheck)
+    {
+        if (eventCheck)
+        {
+            Arch.SetActive(false);
+            Audio.SetActive(false);
+            Cam.GetComponent<Camera>().clearFlags = CameraClearFlags.Depth;
+        }
+        else
+        {
+            Arch.SetActive(true);
+            Audio.SetActive(true);
+            Cam.GetComponent<Camera>().clearFlags = CameraClearFlags.Skybox;
+        }
     }
 }
