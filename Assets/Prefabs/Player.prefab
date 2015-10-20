@@ -887,7 +887,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 143064}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.21000004, y: 1.09000003, z: 0}
+  m_LocalPosition: {x: 38.4399986, y: 18.9200001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 486026}
@@ -1660,7 +1660,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: a18f1dd3238386a45aa024709b77b190, type: 3}
+  m_audioClip: {fileID: 8300000, guid: ea409f8519a319d4b909836b70acbc70, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1729,7 +1729,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 903378945fad186499c19bf47a19a7a0, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a3afb27e099052d4895ef185097208e2, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1798,7 +1798,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 74ad90ecbb8db0a4caac7240aeb34ffb, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a3afb27e099052d4895ef185097208e2, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1867,7 +1867,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 2f12565b9cb38b6479ec084426ef1c22, type: 3}
+  m_audioClip: {fileID: 8300000, guid: ea409f8519a319d4b909836b70acbc70, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1969,10 +1969,6 @@ MonoBehaviour:
   a2: {fileID: 8298586}
   a3: {fileID: 8289048}
   a4: {fileID: 8292852}
-  turnOffObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  Cam: {fileID: 178450}
 --- !u!114 &11443832
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1988,9 +1984,9 @@ MonoBehaviour:
   RunSpeed: 23
   airAcceleration: 5
   groundAcceleration: 50
-  shortJumpHeight: 2
-  longJumpHeight: 4
-  jumpPrepTime: .150000006
+  shortJumpHeight: 3
+  longJumpHeight: 6
+  jumpPrepTime: 0
   canDoubleJump: 1
   gripCurve:
     serializedVersion: 2
@@ -2047,17 +2043,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - time: -90
-      value: 1.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 0
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 90
-      value: 0
+    - time: 93.25
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2165,7 +2156,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: Gravity
+      value: -70
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 143064}
