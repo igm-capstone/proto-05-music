@@ -26,7 +26,7 @@ public class ComposerBehaviour : MonoBehaviour
     private AudioSource[] speakers;
     public int playbackBPM = 60;
     
-    private int maxSpeakers = 10;
+    private int maxSpeakers = 100;
 
     private int _currentSpeaker;
     private int currentSpeaker 
