@@ -12,6 +12,7 @@ public class CollectibleBehavior : MonoBehaviour
     private ComposerBehaviour jukebox;
     public float        m_playerSpeed;
     private Vector3     m_DebugRay;
+    private UIBehavior  m_UIBehavior;
 
     public float lengthInBeats  = 1.0f;
     private bool m_isCollected   = false;
@@ -22,6 +23,7 @@ public class CollectibleBehavior : MonoBehaviour
         jukebox         = FindObjectOfType<ComposerBehaviour>();
         m_playerSpeed   = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RunSpeed;
         m_DebugRay      = (transform.right * m_playerSpeed * m_audioSource.clip.length);
+        m_UIBehavior    = FindObjectOfType<UIBehavior>();
     }
 
     void OnDrawGizmos()
@@ -40,7 +42,7 @@ public class CollectibleBehavior : MonoBehaviour
 
             //Adding both regardlessly for now, may revisit later
             jukebox.AddSingleSound(this);
-
+            m_UIBehavior.SetAudioSource(m_audioSource);
             m_audioSource.Play();
         }
     }
