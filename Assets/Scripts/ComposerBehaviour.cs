@@ -75,12 +75,16 @@ public class ComposerBehaviour : MonoBehaviour
     void Awake()
     {
         composition = new List<SoundAction>();
-        soloSpeakers = new AudioSource[maxSpeakers];
-        normalSpeakers = new AudioSource[maxSpeakers];
-        for (int i = 0; i < maxSpeakers; i++)
+        soloSpeakers = new AudioSource[maxSoloSpeakers];
+        for (int i = 0; i < maxSoloSpeakers; i++)
+        {
+            soloSpeakers[i] = gameObject.AddComponent<AudioSource>();
+        }
+
+        normalSpeakers = new AudioSource[maxNormalSpeakers];
+        for (int i = 0; i < maxNormalSpeakers; i++)
         {
             normalSpeakers[i] = gameObject.AddComponent<AudioSource>();
-            soloSpeakers[i] = gameObject.AddComponent<AudioSource>();
         }
     }
 
@@ -161,7 +165,9 @@ public class ComposerBehaviour : MonoBehaviour
             if (a.type == 0)
             {
                 PlayInAvailableSpeaker(a.singleSound.audioClip, false);
-                yield return new WaitForSeconds(60.0f / (float)playbackBPM * a.singleSound.lengthInBeats);
+              //  yield return new WaitForSeconds(60.0f / (float)playbackBPM * a.singleSound.lengthInBeats);
+                yield return new WaitForSeconds(a.singleSound.audioClip.length); // Leaving this like this just for showing sound guys... Gabe
+
             }
             else
             {
