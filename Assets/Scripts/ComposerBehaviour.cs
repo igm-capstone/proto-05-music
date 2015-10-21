@@ -23,28 +23,49 @@ public class SoundAction
 public class ComposerBehaviour : MonoBehaviour
 {
     private List<SoundAction> composition;
-    private AudioSource[] speakers;
+    private AudioSource[] soloSpeakers;
+    private AudioSource[] normalSpeakers;
     public int playbackBPM = 60;
-    
-    private int maxSpeakers = 100;
 
-    private int _currentSpeaker;
-    private int currentSpeaker 
+    private int maxNormalSpeakers = 10;
+    private int maxSoloSpeakers = 5;
+
+    private int _currentNormalSpeaker;
+    private int currentNormalSpeaker
     {
         get
         {
-            return _currentSpeaker;
+            return _currentNormalSpeaker;
         }
         set
         {
-            if (value >= maxSpeakers)
-                _currentSpeaker = 0;
+            if (value >= maxNormalSpeakers)
+                _currentNormalSpeaker = 0;
             else if (value < 0)
-                _currentSpeaker = maxSpeakers;
+                _currentNormalSpeaker = maxNormalSpeakers;
             else
-                _currentSpeaker = value;
+                _currentNormalSpeaker = value;
         }
     }
+
+    private int _currentSoloSpeaker;
+    private int currentSoloSpeaker
+    {
+        get
+        {
+            return _currentSoloSpeaker;
+        }
+        set
+        {
+            if (value >= maxSoloSpeakers)
+                _currentSoloSpeaker = 0;
+            else if (value < 0)
+                _currentSoloSpeaker = maxSoloSpeakers;
+            else
+                _currentSoloSpeaker = value;
+        }
+    }
+
 
     SoundAction currentSolo;
     bool isRecordingSolo = false;
@@ -54,10 +75,12 @@ public class ComposerBehaviour : MonoBehaviour
     void Awake()
     {
         composition = new List<SoundAction>();
-        speakers = new AudioSource[maxSpeakers];
+        soloSpeakers = new AudioSource[maxSpeakers];
+        normalSpeakers = new AudioSource[maxSpeakers];
         for (int i = 0; i < maxSpeakers; i++)
         {
-            speakers[i] = gameObject.AddComponent<AudioSource>();
+            normalSpeakers[i] = gameObject.AddComponent<AudioSource>();
+            soloSpeakers[i] = gameObject.AddComponent<AudioSource>();
         }
     }
 
@@ -137,7 +160,7 @@ public class ComposerBehaviour : MonoBehaviour
         {
             if (a.type == 0)
             {
-                PlayInAvailableSpeaker(a.singleSound.audioClip);
+                PlayInAvailableSpeaker(a.singleSound.audioClip, false);
                 yield return new WaitForSeconds(60.0f / (float)playbackBPM * a.singleSound.lengthInBeats);
             }
             else
@@ -156,16 +179,26 @@ public class ComposerBehaviour : MonoBehaviour
         int count = a.solo.Count;
         for (int i = 0; i < count; i++)
         {
-            PlayInAvailableSpeaker(a.solo[i].audioClip);
+            PlayInAvailableSpeaker(a.solo[i].audioClip, true);
             if (i != count - 1)
                 yield return new WaitForSeconds(a.solo[i+1].timeStamp - a.solo[i].timeStamp);
         }
     }
 
-    private void PlayInAvailableSpeaker(AudioClip c)
+    private void PlayInAvailableSpeaker(AudioClip c, bool isSolo)
     {
-        speakers[currentSpeaker].clip = c;
-        speakers[currentSpeaker].Play();
-        currentSpeaker++;
+        if (isSolo)
+        {
+            soloSpeakers[currentSoloSpeaker].clip = c;
+            soloSpeakers[currentSoloSpeaker].Play();
+            currentSoloSpeaker++;
+        }
+        else
+        {
+            normalSpeakers[currentNormalSpeaker].clip = c;
+            normalSpeakers[currentNormalSpeaker].Play();
+            currentNormalSpeaker++;
+        }
+        
     }
 }
