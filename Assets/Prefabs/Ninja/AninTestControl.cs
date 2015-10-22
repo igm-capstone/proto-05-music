@@ -7,12 +7,16 @@ public class AninTestControl : MonoBehaviour
     Rigidbody rgdBdy;
     bool OnAir;
 
+    Renderer rndr;
+
     // Use this for initialization
     void Start()
     {
         animtr = GetComponentInChildren<Animator>();
         rgdBdy = GetComponent<Rigidbody>();
         OnAir = false;
+
+        rndr = GetComponentInChildren<Renderer>();
     }
 
     // Update is called once per frame
@@ -43,10 +47,14 @@ public class AninTestControl : MonoBehaviour
             Debug.Log("HeavyAttack");
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKey(KeyCode.F))
         {
-            animtr.SetTrigger("Dash");
-            Debug.Log("Dash");
+            animtr.SetBool("isDashing", true);
+            Debug.Log("isDashing");
+        }
+        else
+        {
+            animtr.SetBool("isDashing", false);
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -54,6 +62,10 @@ public class AninTestControl : MonoBehaviour
             OnAir = !OnAir;
             animtr.SetBool("OnAir", OnAir);
             Debug.Log("Jump");
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            //rndr.material.mainTexture = guitarTexture;
         }
     }
 }
