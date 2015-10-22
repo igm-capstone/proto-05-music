@@ -1277,7 +1277,7 @@ MonoBehaviour:
   shader: {fileID: 4800000, guid: daf9781cad112c75d0008dfa8d76c639, type: 3}
   textureRamp: {fileID: 2800000, guid: e9a9781cad112c75d0008dfa8d76c639, type: 3}
   rampOffset: 0
-  effectAmount: 0
+  effectAmount: 1
 --- !u!4 &297068874 stripped
 Transform:
   m_PrefabParentObject: {fileID: 463136, guid: cdcf75af94c21684990ead479493f2b5, type: 2}
@@ -3300,7 +3300,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &764303435
 Transform:
   m_ObjectHideFlags: 0
@@ -4430,7 +4430,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &950691287
 Transform:
   m_ObjectHideFlags: 0
@@ -5961,7 +5961,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 407978, guid: 57dbb63259233704d8523fa0fbde3105, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 11486280, guid: 57dbb63259233704d8523fa0fbde3105, type: 2}
       propertyPath: slopeLimit

@@ -75,11 +75,15 @@ public class ComposerBehaviour : MonoBehaviour
     void Awake()
     {
         composition = new List<SoundAction>();
-        soloSpeakers = new AudioSource[maxSpeakers];
-        normalSpeakers = new AudioSource[maxSpeakers];
-        for (int i = 0; i < maxSpeakers; i++)
+        soloSpeakers = new AudioSource[maxSoloSpeakers];
+        normalSpeakers = new AudioSource[maxNormalSpeakers];
+        for (int i = 0; i < maxNormalSpeakers; i++)
         {
             normalSpeakers[i] = gameObject.AddComponent<AudioSource>();
+        }
+
+        for (int i = 0; i < maxSoloSpeakers; i++)
+        {
             soloSpeakers[i] = gameObject.AddComponent<AudioSource>();
         }
     }
