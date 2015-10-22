@@ -165,7 +165,8 @@ public class ComposerBehaviour : MonoBehaviour
             if (a.type == 0)
             {
                 PlayInAvailableSpeaker(a.singleSound.audioClip, false);
-                yield return new WaitForSeconds(60.0f / (float)playbackBPM * a.singleSound.lengthInBeats);
+                //yield return new WaitForSeconds(60.0f / (float)playbackBPM * a.singleSound.lengthInBeats);
+                yield return new WaitForSeconds(a.singleSound.audioClip.length);
             }
             else
             {

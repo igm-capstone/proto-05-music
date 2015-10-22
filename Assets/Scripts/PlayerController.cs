@@ -95,7 +95,10 @@ public class PlayerController : MonoBehaviour
             dash.StartDash(gameObject.GetComponent<Collider2D>());
 
         if (other.tag == "Goal")
+        {
             GameObject.FindObjectOfType<ComposerBehaviour>().PlayComposition();
+            GameObject.FindObjectOfType<GoalBehavior>().GoToNextLevel(this.gameObject);
+        }
     }
 
     public void DashTo(Vector2 target, float duration, AnimationCurve curve = null)
