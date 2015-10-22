@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Prime31;
+using UnityStandardAssets.ImageEffects;
 
 public class PlayerController : MonoBehaviour
 {
@@ -51,6 +52,12 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private CharacterController2D controller;
     public bool eventCheck = false;
+    private AudioSource collectible;
+
+    private float timeSinceLastCollectible = 0.0f;
+    private GameObject camera;
+    private float offset;
+    private bool collected = false;
 
     void Awake()
     {
@@ -62,13 +69,20 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         controller.onTriggerEnterEvent += TriggerEnterEvent;
+        camera = GameObject.Find("Main Camera");
     }
 
     void TriggerEnterEvent(Collider2D other)
     {
         var audio = other.GetComponent<CollectibleBehavior>();
         if (audio != null)
+        {
+            collectible = other.gameObject.GetComponent<AudioSource>();
             audio.PlayAudio(gameObject.GetComponent<Collider2D>());
+            timeSinceLastCollectible = 0.0f;
+            offset = Time.time;
+            collected = true;
+        }
 
         if (other.tag == "Enemy") { 
             var attack = gameObject.GetComponent<AttackEvent>();
@@ -98,6 +112,28 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        timeSinceLastCollectible += Time.deltaTime;
+        if (collectible != null)
+        {           
+            if (timeSinceLastCollectible  >= 0)
+            {
+                float value = Mathf.Lerp(-1f, 1, (Time.time - offset - (collectible.clip.length + 2)) * 0.25f);
+                camera.GetComponent<Grayscale>().changeEffectAmount(value);
+                collected = false;
+               // Debug.Log(value);
+            }
+        }
+        if (collected)
+        {
+            //if the color is bw and the player collects a new collectible.
+            if (camera.GetComponent<Grayscale>().effectAmount >= -1f)
+            {
+                float temp = camera.GetComponent<Grayscale>().effectAmount;
+                float value = Mathf.Lerp(temp, -1, (Time.time - offset) * 0.5f);
+                camera.GetComponent<Grayscale>().changeEffectAmount(value);
+                Debug.Log(value);
+            }
+        }
         //var horizontal = Input.GetAxis("Horizontal");
         //var isMovingLeft = horizontal < 0f;
         //var isMovingRight = horizontal > 0f;
