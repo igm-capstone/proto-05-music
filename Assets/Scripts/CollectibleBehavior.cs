@@ -16,7 +16,7 @@ public class CollectibleBehavior : MonoBehaviour
 
     public float lengthInBeats  = 1.0f;
     private bool m_isCollected   = false;
-	void Start ()
+    void Start ()
     {
         m_audioSource   = GetComponent<AudioSource>();
         m_Collider      = GetComponent<Collider2D>();
@@ -24,6 +24,7 @@ public class CollectibleBehavior : MonoBehaviour
         m_playerSpeed   = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RunSpeed;
         m_DebugRay      = (transform.right * m_playerSpeed * m_audioSource.clip.length);
         m_UIBehavior    = FindObjectOfType<UIBehavior>();
+
     }
 
     void OnDrawGizmos()

@@ -52,11 +52,11 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private CharacterController2D controller;
     public bool eventCheck = false;
-    private AudioSource collectible;
+    private AudioSource collectibleAudioSource;
 
     private float timeSinceLastCollectible = 0.0f;
-    private GameObject camera;
-    private float offset;
+    private GameObject camera,UI;
+    private float offset, normalizedAudioPlaybackTime;
     private bool collected = false;
 
     void Awake()
@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour
     {
         controller.onTriggerEnterEvent += TriggerEnterEvent;
         camera = GameObject.Find("Main Camera");
+        UI = GameObject.Find("UI");
     }
 
     void TriggerEnterEvent(Collider2D other)
@@ -77,7 +78,7 @@ public class PlayerController : MonoBehaviour
         var audio = other.GetComponent<CollectibleBehavior>();
         if (audio != null)
         {
-            collectible = other.gameObject.GetComponent<AudioSource>();
+            collectibleAudioSource = other.gameObject.GetComponent<AudioSource>();
             audio.PlayAudio(gameObject.GetComponent<Collider2D>());
             timeSinceLastCollectible = 0.0f;
             offset = Time.time;
@@ -115,28 +116,40 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
+        //change from color to b&w while each audio is playing
         timeSinceLastCollectible += Time.deltaTime;
-        if (collectible != null)
-        {           
-            if (timeSinceLastCollectible  >= 0)
-            {
-                float value = Mathf.Lerp(-1f, 1, (Time.time - offset - (collectible.clip.length + 2)) * 0.25f);
-                camera.GetComponent<Grayscale>().changeEffectAmount(value);
-                collected = false;
-               // Debug.Log(value);
-            }
-        }
-        if (collected)
+        if (collectibleAudioSource != null)
         {
-            //if the color is bw and the player collects a new collectible.
-            if (camera.GetComponent<Grayscale>().effectAmount >= -1f)
-            {
-                float temp = camera.GetComponent<Grayscale>().effectAmount;
-                float value = Mathf.Lerp(temp, -1, (Time.time - offset) * 0.5f);
-                camera.GetComponent<Grayscale>().changeEffectAmount(value);
-                Debug.Log(value);
-            }
+            //if (timeSinceLastCollectible >= 0)
+            //{
+                if (collectibleAudioSource.isPlaying)
+                {
+                  
+                    normalizedAudioPlaybackTime = (collectibleAudioSource.clip.length - collectibleAudioSource.time) / collectibleAudioSource.clip.length;
+                    
+                    float value = Mathf.Lerp(1, -1, normalizedAudioPlaybackTime); // Mathf.Lerp(-1f, 1, (Time.time - offset - (collectibleAudioSource.clip.length + 2)) * 0.25f);
+                    camera.GetComponent<Grayscale>().changeEffectAmount(value);
+                    Debug.Log("____" + value);
+                }
+                
+                //Debug.Log("____" + normalizedAudioPlaybackTime);
+                collected = false;
+            //}
         }
+
+        //change to color from b&w when audio is collected. 
+        //if (collected)
+        //{
+        //    //if the color is bw and the player collects a new collectible.
+        //    if (camera.GetComponent<Grayscale>().effectAmount >= -1f)
+        //    {
+        //        float temp = camera.GetComponent<Grayscale>().effectAmount;
+        //        float value = Mathf.Lerp(temp, -1, (Time.time - offset) * 0.5f);
+        //        camera.GetComponent<Grayscale>().changeEffectAmount(value);
+        //        //Debug.Log(value);
+        //    }
+        //}
         //var horizontal = Input.GetAxis("Horizontal");
         //var isMovingLeft = horizontal < 0f;
         //var isMovingRight = horizontal > 0f;
@@ -145,10 +158,7 @@ public class PlayerController : MonoBehaviour
         prevDPadY = dPadY;
 
         dPadX = Input.GetAxis("DPadX");
-        dPadY = Input.GetAxis("DPadY");
-        Debug.Log("DPad X: " + dPadX);
-        Debug.Log("DPad Y: " + dPadY);
-
+        dPadY = Input.GetAxis("DPadY");    
 
         var isMovingLeft = Input.GetKey(KeyCode.LeftArrow) || (GetDPadLeftButton());
         var isMovingRight = Input.GetKey(KeyCode.RightArrow) || (GetDPadRightButton());
