@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
             timeSinceLastCollectible = 0.0f;
             offset = Time.time;
             collected = true;
+            //GameObject.FindObjectOfType<Visualizer>().start = true;
         }
 
         if (other.tag == "Enemy") { 
@@ -121,35 +122,27 @@ public class PlayerController : MonoBehaviour
         timeSinceLastCollectible += Time.deltaTime;
         if (collectibleAudioSource != null)
         {
-            //if (timeSinceLastCollectible >= 0)
-            //{
-                if (collectibleAudioSource.isPlaying)
-                {
-                  
-                    normalizedAudioPlaybackTime = (collectibleAudioSource.clip.length - collectibleAudioSource.time) / collectibleAudioSource.clip.length;
-                    
-                    float value = Mathf.Lerp(1, -1, normalizedAudioPlaybackTime); // Mathf.Lerp(-1f, 1, (Time.time - offset - (collectibleAudioSource.clip.length + 2)) * 0.25f);
-                    camera.GetComponent<Grayscale>().changeEffectAmount(value);
-                    Debug.Log("____" + value);
-                }
-                
-                //Debug.Log("____" + normalizedAudioPlaybackTime);
+            if (timeSinceLastCollectible >= collectibleAudioSource.clip.length + 1)
+            {
+                float value = Mathf.Lerp(-1f, 1, (Time.time - offset - (collectibleAudioSource.clip.length + 1)) * 0.25f); /*Mathf.Lerp(1, -1, normalizedAudioPlaybackTime); */ 
+                camera.GetComponent<Grayscale>().changeEffectAmount(value);
                 collected = false;
-            //}
+               // GameObject.FindObjectOfType<Visualizer>().start = false;
+            }
         }
 
-        //change to color from b&w when audio is collected. 
-        //if (collected)
-        //{
-        //    //if the color is bw and the player collects a new collectible.
-        //    if (camera.GetComponent<Grayscale>().effectAmount >= -1f)
-        //    {
-        //        float temp = camera.GetComponent<Grayscale>().effectAmount;
-        //        float value = Mathf.Lerp(temp, -1, (Time.time - offset) * 0.5f);
-        //        camera.GetComponent<Grayscale>().changeEffectAmount(value);
-        //        //Debug.Log(value);
-        //    }
-        //}
+       // change to color from b&w when audio is collected. 
+        if (collected)
+        {
+            if (camera.GetComponent<Grayscale>().effectAmount >= -1f)
+            {
+                float temp = camera.GetComponent<Grayscale>().effectAmount;
+                float value = Mathf.Lerp(temp, -1, (Time.time - offset) * 0.25f);
+                camera.GetComponent<Grayscale>().changeEffectAmount(value);
+               // Debug.Log(value);
+            }
+        }
+
         //var horizontal = Input.GetAxis("Horizontal");
         //var isMovingLeft = horizontal < 0f;
         //var isMovingRight = horizontal > 0f;
